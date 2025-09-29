@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Minh Hưng — Demo website</title>
+  <meta name="description" content="Web show profile by minh hung-demo" />
+
+  <!-- Security basics -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
+  <!-- CSP: cho inline script & style để trang hoạt động; không gọi bên ngoài (trừ ảnh của bạn) -->
+  <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' https://sf-static.upanhlaylink.com data:;
+        frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+        connect-src 'self';
+        base-uri 'self';
+        form-action 'self' mailto:;
+        object-src 'none';
+        upgrade-insecure-requests
+      " />
+
+
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0a0b0e" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
+
+  <style>
+    :root {
+      --bg: #0a0b0e; --panel: #0f1117; --panel-2: #121522; --text: #e8ecf1; --muted: #9aa3b2;
+      --neon-blue: #00eaff; --neon-pink: #ff2dbf; --neon-green: #39ff14;
+      --ring-size: 120px; --ring-gap: 12px; --radius: 18px; --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
+    }
+    :root[data-theme="light"] { --bg:#f6f8fb; --panel:#fff; --panel-2:#f3f6fa; --text:#0a0b0e; --muted:#4b5563; --shadow-soft:0 8px 20px rgba(10,11,14,.06); }
+
+    @property --fill { syntax:"<number>"; inherits:false; initial-value:0; }
+
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at -10% -20%, rgba(0,234,255,.06), transparent 60%),
+        radial-gradient(800px 500px at 110% 10%, rgba(255,45,191,.05), transparent 50%),
+        radial-gradient(600px 400px at 50% 120%, rgba(57,255,20,.04), transparent 60%),
+        var(--bg);
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.6;padding-bottom:24px;
+      transition:background .4s ease,color .3s ease;
+    }
+    .parallax-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background-image:
+        radial-gradient(800px 400px at 10% 10%, rgba(0,234,255,.06), transparent),
+        radial-gradient(600px 360px at 90% 40%, rgba(255,45,191,.05), transparent),
+        radial-gradient(400px 260px at 50% 110%, rgba(57,255,20,.03), transparent);
+      transform:translate3d(0,0,0);will-change:transform;
+    }
+    .container{max-width:980px;margin:0 auto;padding:12px 16px 40px;display:grid;gap:20px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0)) padding-box,
+      linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)) border-box;
+      border:1px solid transparent;border-radius:var(--radius);box-shadow:var(--shadow-soft)}
+    .top-socials{width:100%;display:grid;place-items:center;padding:8px 12px 4px}
+    .social-grid{list-style:none;padding:0;margin:0;display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+    .social-item{display:grid;justify-items:center;gap:8px;min-width:84px}
+    .icon-card{--glow:var(--neon-blue);width:72px;height:72px;display:grid;place-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.06);border-radius:14px;color:#fff;text-decoration:none;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, color .2s ease;
+      box-shadow:inset 0 0 18px rgba(255,255,255,.02), 0 6px 18px rgba(0,0,0,.25); position:relative}
+    .icon-card::after{content:"";position:absolute;inset:-1px;border-radius:inherit;opacity:0;
+      box-shadow:0 0 14px var(--glow), 0 0 28px color-mix(in srgb, var(--glow), transparent 55%);transition:opacity .2s}
+    .icon-card:hover{transform:translateY(-2px) scale(1.03);border-color:color-mix(in srgb, var(--glow), #fff 15%)}
+    .icon-card:hover::after{opacity:1}
+    .icon-card svg{width:32px;height:32px;display:block}
+    .icon-label{font-size:13px;color:var(--muted);letter-spacing:.2px;text-align:center}
+    .icon-facebook{--glow:var(--neon-blue)} .icon-github{--glow:var(--neon-green)} .icon-zalo{--glow:var(--neon-blue)}
+    .icon-instagram{--glow:var(--neon-pink)} .icon-website{--glow:var(--neon-blue)}
+
+    .header{display:grid;place-items:center;text-align:center;padding:28px 18px 22px;gap:12px;position:relative}
+    .avatar{width:128px;height:128px;border-radius:9999px;border:2px solid rgba(255,255,255,.12);
+      box-shadow:0 0 0 4px rgba(255,255,255,.03), 0 12px 30px rgba(0,0,0,.4), 0 0 18px rgba(0,234,255,.18);
+      object-fit:cover;z-index:1;animation:avatar-sway 6s ease-in-out infinite;transform-origin:50% 50%}
+    @keyframes avatar-sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+    h1.name{font-size:clamp(28px,5vw,40px);margin:6px 0 0;letter-spacing:.3px;font-weight:800;text-shadow:0 0 18px rgba(0,234,255,.25), 0 2px 0 rgba(0,0,0,.18)}
+    p.tagline{color:var(--muted);margin:6px 0 4px;font-size:16px;min-height:22px}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,.06);padding:8px 12px;border-radius:12px;cursor:pointer;color:var(--text);
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;user-select:none}
+    .btn:hover{transform:translateY(-2px)}
+    .section{padding:20px}
+    .section-title{font-size:20px;letter-spacing:.4px;font-weight:700;margin:2px 2px 12px;display:inline-block;padding-bottom:3px;border-bottom:2px solid rgba(255,255,255,.06)}
+
+    .skills{display:grid;gap:14px;grid-template-columns:repeat(6, minmax(0, 1fr))}
+    @media (max-width:980px){.skills{grid-template-columns:repeat(3, minmax(0,1fr))}}
+    @media (max-width:520px){.skills{grid-template-columns:repeat(2, minmax(0,1fr))}}
+
+    .skill{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)) padding-box,
+      linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)) border-box;
+      border:1px solid transparent;border-radius:14px;padding:14px;display:grid;place-items:center;gap:10px;text-align:center;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
+    .skill:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.25), 0 0 18px rgba(0,234,255,.12);border-color:rgba(255,255,255,.08)}
+    .skill-name{font-size:14px;color:var(--muted)}
+    .ring{--val:75;--fill:0;--neon:var(--neon-blue);width:var(--ring-size);height:var(--ring-size);border-radius:50%;
+      background:conic-gradient(var(--neon) calc(var(--fill)*1%), rgba(255,255,255,.06) 0);
+      display:grid;place-items:center;position:relative;transition:filter .2s ease, background .9s ease}
+    .ring::after{content:"";position:absolute;inset:var(--ring-gap);background:var(--panel);border-radius:inherit;box-shadow:inset 0 0 16px rgba(0,0,0,.25)}
+    .ring-value{position:relative;z-index:1;font-weight:800;font-size:18px}
+
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .timeline-item{display:flex;gap:12px;align-items:flex-start}
+    .timeline-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      display:grid;place-items:center;color:var(--muted);border:1px solid rgba(255,255,255,.04);flex-shrink:0}
+    .timeline-title{font-weight:700;font-size:15px}
+    .timeline-meta{color:var(--muted);font-size:13px}
+
+    .projects{display:grid;grid-template-columns:repeat(3, 1fr);gap:12px}
+    @media (max-width:900px){.projects{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:520px){.projects{grid-template-columns:1fr}}
+    .project{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.04);background:linear-gradient(180deg, rgba(255,255,255,.012), rgba(255,255,255,0));padding:12px}
+    .project img{width:100%;height:120px;object-fit:cover;border-radius:8px}
+    .project h3{margin:8px 0 4px;font-size:15px}
+    .project p{margin:0;color:var(--muted);font-size:13px}
+    .project-links{display:flex;gap:8px;margin-top:8px}
+    .link{font-size:13px;color:var(--neon-blue);text-decoration:none;border-bottom:1px dashed color-mix(in srgb, var(--neon-blue), transparent 50%);padding-bottom:1px}
+    .link:hover{border-bottom-style:solid}
+
+    footer{text-align:center;color:var(--muted);padding:12px 12px 0;font-size:14px}
+    .yt-audio-frame{position:absolute;width:0;height:0;opacity:0;pointer-events:none}
+
+    .hidden{display:none!important}
+    .fade-in{opacity:0;transform:translateY(10px);transition:opacity 560ms ease, transform 560ms ease}
+    .appear{opacity:1;transform:translateY(0)}
+    .console-modal,.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.95);
+      min-width:300px;max-width:720px;width:90%;background:var(--panel);border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);padding:12px;z-index:9999;display:none}
+    .console-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .console-output{height:280px;overflow:auto;background:rgba(0,0,0,.03);padding:8px;border-radius:8px;margin-top:8px;color:var(--muted);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace;font-size:13px;white-space:pre-wrap}
+    .console-input{width:100%;margin-top:8px;display:flex;gap:8px}
+    .console-input input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--text);outline:none}
+
+    .tabs{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .tab{padding:6px 10px;border:1px solid rgba(255,255,255,.08);border-radius:999px;font-size:12px;cursor:pointer}
+    .tab.active{border-color:rgba(0,234,255,.6);box-shadow:0 0 0 1px rgba(0,234,255,.15) inset}
+
+    #snakeCanvas{width:100%;height:260px;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.06)}
+    .g2048{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(255,255,255,.02);padding:8px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
+    .gcell{aspect-ratio:1/1;display:grid;place-items:center;border-radius:10px;font-weight:800}
+    .c0{background:rgba(255,255,255,.04);color:var(--muted)} .c2{background:#eee4da;color:#776e65}
+    .c4{background:#ede0c8;color:#776e65} .c8{background:#f2b179;color:#fff}
+    .c16{background:#f59563;color:#fff} .c32{background:#f67c5f;color:#fff}
+    .c64{background:#f65e3b;color:#fff} .c128{background:#edcf72;color:#fff}
+    .c256{background:#edcc61;color:#fff} .c512{background:#edc850;color:#fff}
+    .c1024{background:#edc53f;color:#fff} .c2048{background:#edc22e;color:#fff}
+
+    .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:2px 6px;border-radius:6px}
+
+    .show-focus :focus{outline:2px solid color-mix(in srgb, var(--neon-blue), #fff 30%); outline-offset:2px}
+
+    @media (prefers-reduced-motion:reduce){.avatar{animation:none}.fade-in{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="parallax-bg" aria-hidden="true"></div>
+
+  <!-- Giữ nguyên cấu hình MXH -->
+  <script id="benadmin" type="application/json">
+  {
+    "facebook": "https://www.facebook.com/mhung.16.11",
+    "github": "https://github.com/hungdoaifaketau",
+    "zalo": "https://zalo.me/113",
+    "instagram": "",
+    "website": "https://hungdichvumxh.pro"
+  }
+  </script>
+
+  <!-- Mạng xã hội -->
+  <section class="top-socials" aria-label="Mạng xã hội">
+    <ul class="social-grid" id="social-grid" role="list"></ul>
+  </section>
+
+  <main class="container" role="main">
+    <!-- Header -->
+    <section class="card header" aria-labelledby="profile-title">
+      <img
+        class="avatar" id="avatar"
+        src="https://sf-static.upanhlaylink.com/img/image_20250809fa30850ca09b1f9e2cc9425cc40c5526.jpg"
+        alt="Ảnh đại diện"
+        width="128" height="128" loading="lazy" decoding="async"
+      />
+      <h1 id="profile-title" class="name">Minh Hưng</h1>
+      <p class="tagline" id="typewriter" aria-live="polite"></p>
+      <div class="controls" role="group" aria-label="Điều khiển giao diện">
+        <button id="toggle-theme" class="btn" type="button" title="Chuyển giao diện">🌗 Theme</button>
+        <button id="open-console" class="btn" type="button" title="Console mode (easter egg)">>_ Console</button>
+        <button id="play-audio" class="btn" type="button" title="Nhạc cục bộ (WebAudio)">♫ Play Music</button>
+        <button id="open-quiz" class="btn" type="button" title="Mini Quiz">Quiz</button>
+        <!-- mới -->
+        <button id="open-arcade" class="btn" type="button" title="Arcade (Snake + 2048)">🕹️ Arcade</button>
+        <button id="open-mystery" class="btn" type="button" title="Mystery tools">🕵️ Mystery</button>
+        <button id="toggle-stealth" class="btn" type="button" title="Ẩn MXH & che avatar">🛡️ Stealth</button>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="card section fade-in" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="section-title">My Coding Skills</h2>
+      <div class="skills" role="list">
+        <div class="skill" role="listitem">
+          <div class="ring" data-val="92" style="--val:92; --neon: var(--neon-pink); --fill:0;"><div class="ring-value">92%</div></div>
+          <div class="skill-name">HTML</div>
+        </div>
+        <div class="skill" role="listitem">
+          <div class="ring" data-val="88" style="--val:88; --neon: var(--neon-blue); --fill:0;"><div class="ring-value">88%</div></div>
+          <div class="skill-name">CSS</div>
+        </div>
+        <div class="skill" role="listitem">
+          <div class="ring" data-val="84" style="--val:84; --neon: var(--neon-green); --fill:0;"><div class="ring-value">84%</div></div>
+          <div class="skill-name">JavaScript</div>
+        </div>
+        <div class="skill" role="listitem">
+          <div class="ring" data-val="80" style="--val:80; --neon: var(--neon-pink); --fill:0;"><div class="ring-value">80%</div></div>
+          <div class="skill-name">Python</div>
+        </div>
+        <div class="skill" role="listitem">
+          <div class="ring" data-val="1" style="--val:1; --neon: var(--neon-blue); --fill:0;"><div class="ring-value">1%</div></div>
+          <div class="skill-name">C++</div>
+        </div>
+        <div class="skill" role="listitem" aria-label="More skills coming soon">
+          <div class="ring" data-val="65" style="--val:65; --neon: var(--neon-green); --fill:0;"><div class="ring-value">65%</div></div>
+          <div class="skill-name">and more…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="card section fade-in" aria-labelledby="timeline-title">
+      <h2 id="timeline-title" class="section-title">Timeline</h2>
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-icon" aria-hidden="true">📍</div><div class="timeline-body"><div class="timeline-title">Location — Ho Chi Minh City</div><div class="timeline-meta">TP.HCM</div></div></div>
+        <div class="timeline-item"><div class="timeline-icon" aria-hidden="true">💻</div><div class="timeline-body"><div class="timeline-title">Bắt đầu học lập trình</div><div class="timeline-meta">2024 — Bắt đầu học code HTML/CSS & Python cơ bản</div></div></div>
+        <div class="timeline-item"><div class="timeline-icon" aria-hidden="true">🚀</div><div class="timeline-body"><div class="timeline-title">tool python: Tool tự động hóa, Bot Telegram, Website</div><div class="timeline-meta">Repo: github.com/hungdoaifaketau</div></div></div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="card section fade-in" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title">Dự án tiêu biểu</h2>
+      <div class="projects">
+        <article class="project">
+          <img src="https://sf-static.upanhlaylink.com/img/image_20250810938f1e0f85d28e988a644e59c7a090c4.jpg" alt="Xem trước dự án tool Python tự động hóa" width="400" height="120" loading="lazy" decoding="async" />
+          <h3>Tool python tự động hóa</h3>
+          <p>Script & Telegram bot để tự động hóa một số tác vụ.</p>
+          <div class="project-links">
+            <a class="link" href="https://github.com/hungdoaifaketau" target="_blank" rel="noopener noreferrer">Repo</a>
+            <a class="link" href="#" aria-disabled="true">Demo</a>
+          </div>
+        </article>
+        <article class="project">
+          <img src="https://sf-static.upanhlaylink.com/img/image_20250810152c6a0df4d3cd84efb4cac595a9386d.jpg" alt="Xem trước dự án website bán hàng và photobooth" width="400" height="120" loading="lazy" decoding="async" />
+          <h3>Website bán hàng / Photobooth / Firebase</h3>
+          <p>Thêm sticker, lưu ảnh nhiều lần và kết nối Firebase.</p>
+          <div class="project-links">
+            <a class="link" href="#" aria-disabled="true">Repo</a>
+            <a class="link" href="#" aria-disabled="true">Demo</a>
+          </div>
+        </article>
+        <article class="project">
+          <img src="https://sf-static.upanhlaylink.com/img/image_20250810534b72a173627608ca39d3621287b25a.jpg" alt="Xem trước dự án tăng tương tác MXH" width="400" height="120" loading="lazy" decoding="async" />
+          <h3>Các tool tăng tương tác MXH</h3>
+          <p>Reg page, tăng like, share, view cho mạng xã hội.</p>
+          <div class="project-links">
+            <a class="link" href="#" aria-disabled="true">Repo</a>
+            <a class="link" href="#" aria-disabled="true">Demo</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Website (NEW) -->
+    <section class="card section fade-in" aria-labelledby="website-title">
+      <h2 id="website-title" class="section-title">Website</h2>
+      <p class="tagline">Website của mình</p>
+      <div class="projects">
+        <article class="project">
+          <img src="https://sf-static.upanhlaylink.com/img/image_202508108dabf518012ccc529ee2846b8c97683b.jpg" alt="Ảnh minh họa website hungdichvumxh.pro" width="400" height="120" loading="lazy" decoding="async" />
+          <h3>hungdichvumxh.pro</h3>
+          <p>Dịch vụ MXH, giải pháp số, tối ưu hiệu suất kênh online.</p>
+          <div class="project-links">
+            <a class="link" href="https://hungdichvumxh.pro" target="_blank" rel="noopener noreferrer">Truy cập website</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Liên hệ -->
+    <section class="card section fade-in" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="section-title">Liên hệ</h2>
+      <p class="tagline">Quét QR để inbox Telegram của mình.</p>
+
+      <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:start">
+        <form id="contact-form" aria-label="Form liên hệ" style="display:grid;gap:10px" novalidate>
+          <input id="input-name" name="name" placeholder="Tên của bạn" autocomplete="name" aria-label="Tên của bạn"
+                 style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));color:var(--text);outline:0" />
+          <input id="input-email" name="email" placeholder="Email của bạn" inputmode="email" autocomplete="email" aria-label="Email của bạn"
+                 style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));color:var(--text);outline:0" />
+          <textarea id="input-message" name="message" placeholder="Nội dung" rows="5" aria-label="Nội dung"
+                    style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));color:var(--text);outline:0;resize:vertical"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button id="btn-send" type="submit" class="btn" style="border-color:rgba(0,234,255,.4);box-shadow:0 8px 22px rgba(0,234,255,.15), inset 0 0 0 1px rgba(255,255,255,.04)">✉️ Gửi (mailto)</button>
+            <button id="copy-email" type="button" class="btn">📋 Sao chép email</button>
+          </div>
+          <div id="contact-note" style="color:var(--muted);font-size:12px"></div>
+        </form>
+
+        <div role="group" aria-label="QR và liên kết nhanh"
+             style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding:14px;border:1px dashed rgba(255,255,255,.08);border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0))">
+          <img id="qr-img"
+               src="https://sf-static.upanhlaylink.com/img/image_202508108dabf518012ccc529ee2846b8c97683b.jpg"
+               alt="Mã QR liên hệ Telegram" width="140" height="140"
+               style="width:140px;height:140px;object-fit:cover;border-radius:8px;background:var(--panel)" />
+          <div>
+            <div style="font-weight:700;font-size:18px">Lưu danh bạ nhanh</div>
+            <div style="color:var(--muted);font-size:14px">Quét QR để inbox Telegram của mình.</div>
+          </div>
+        </div>
+
+        <div style="font-weight:700">Quét để kết nối</div>
+        <div style="color:var(--muted);font-size:13px">Inbox Telegram của mình nếu cần hỗ trợ nhé.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <span style="padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)">🌐 Telegram</span>
+          <span style="padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)">💼 LinkedIn</span>
+          <span style="padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)">🧰 GitHub</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="card" aria-label="Footer">
+      <p>© 2025 Minh Hưng. All Rights Reserved. • Code and design by Minh Hưng</p>
+    </footer>
+  </main>
+
+  <!-- Console modal (giữ nguyên UI) -->
+  <div id="console-modal" class="console-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="console-title">
+    <div class="console-header">
+      <strong id="console-title">Console Mode</strong>
+      <div><button id="close-console" class="btn" type="button">Close</button></div>
+    </div>
+    <div id="console-output" class="console-output">Type <code>help</code> to see commands.</div>
+    <div class="console-input">
+      <input id="console-input" placeholder="Nhập lệnh (ví dụ: help, about, skills, projects)" />
+      <button id="console-send" class="btn" type="button">Run</button>
+    </div>
+  </div>
+
+  <!-- Quiz modal (giữ) -->
+  <div id="quiz-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="quiz-title">
+    <h3 id="quiz-title">Mini Quiz: Kiến thức lập trình</h3>
+    <div id="quiz-content" style="margin-top:8px;font-family:inherit;color:var(--text)"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="close-quiz" class="btn" type="button">Đóng</button></div>
+  </div>
+
+  <!-- NEW: Arcade modal -->
+  <div id="arcade-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="arcade-title">
+    <h3 id="arcade-title">🕹️ Arcade</h3>
+    <div class="tabs">
+      <button class="tab active" data-tab="snake">Snake</button>
+      <button class="tab" data-tab="t2048">2048</button>
+    </div>
+    <div id="tab-snake">
+      <canvas id="snakeCanvas" width="400" height="260" aria-label="Snake game"></canvas>
+      <div style="margin-top:8px;color:var(--muted);font-size:13px">Dùng phím <span class="kbd">↑</span><span class="kbd">↓</span><span class="kbd">←</span><span class="kbd">→</span> để chơi. <span id="snakeScore">Điểm: 0</span></div>
+    </div>
+    <div id="tab-t2048" class="hidden">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <button id="gNew" class="btn">🔁 New</button>
+        <div id="gScore" style="font-weight:700">Score: 0</div>
+        <div style="color:var(--muted);font-size:13px;margin-left:auto">Dùng phím mũi tên để gộp ô</div>
+      </div>
+      <div id="gBoard" class="g2048" aria-label="2048 board"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="close-arcade" class="btn" type="button">Đóng</button></div>
+  </div>
+
+  <!-- NEW: Mystery modal -->
+  <div id="mystery-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mystery-title">
+    <h3 id="mystery-title">🕵️ Mystery Lab</h3>
+    <div style="display:grid;gap:10px">
+      <div>
+        <strong>Caesar Cipher</strong>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <input id="cipherText" placeholder="Nhập văn bản" class="btn" style="flex:1;min-width:220px;text-align:left" />
+          <input id="cipherShift" type="number" value="3" class="btn" style="width:80px" />
+          <button id="cipherEnc" class="btn">Mã hoá</button>
+          <button id="cipherDec" class="btn">Giải mã</button>
+        </div>
+        <div id="cipherOut" style="margin-top:6px;color:var(--muted);word-break:break-word"></div>
+      </div>
+      <div>
+        <strong>Riddles</strong>
+        <div id="riddleBox" style="margin-top:6px;color:var(--text)"></div>
+        <button id="riddleNext" class="btn" style="margin-top:6px">Câu khác</button>
+      </div>
+      <div style="color:var(--muted);font-size:12px">Mọi thao tác đều chạy cục bộ (offline). Không ghi log, không gửi dữ liệu.</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button id="close-mystery" class="btn" type="button">Đóng</button></div>
+  </div>
+
+  <!-- YouTube audio -->
+<div id="yt-audio" data-youtube-url="https://www.youtube.com/watch?v=WENU9ifn7L0">
+  <iframe id="yt-iframe"
+          class="yt-audio-frame"
+          title="YouTube audio"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          src=""
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
+          referrerpolicy="origin"
+          loading="lazy">
+  </iframe>
+</div>
+
+
+  <script>
+    function createElement(tag, props = {}, children = []) {
+      const el = document.createElement(tag);
+      Object.entries(props).forEach(([k, v]) => {
+        if (k === "className") el.className = v;
+        else if (k === "dataset") Object.assign(el.dataset, v);
+        else if (k.startsWith("aria-")) el.setAttribute(k, v);
+        else if (k === "html") el.innerHTML = v;
+        else if (v !== undefined && v !== null) el.setAttribute(k, v);
+      });
+      children.forEach(child => {
+        if (typeof child === "string") el.appendChild(document.createTextNode(child));
+        else if (child instanceof Node) el.appendChild(child);
+      });
+      return el;
+    }
+    function safeURL(url){ try{ return new URL(url).href } catch { return "#" } }
+
+    function svgFor(name) {
+      switch (name) {
+        case "facebook": return `<svg viewBox="0 0 320 512" aria-hidden="true"><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91V141.09c0-25.35 12.42-50.06 52.24-50.06H297V6.26S262.43 0 231.36 0c-73.22 0-121.13 44.38-121.13 124.72v70.62H32v92.66h78.23V512h96.17V288z"/></svg>`;
+        case "github": return `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.387.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.726-4.042-1.612-4.042-1.612-.546-1.39-1.333-1.76-1.333-1.76-1.089-.745.083-.73.083-.73 1.205.085 1.84 1.238 1.84 1.238 1.07 1.834 2.807 1.304 3.492.997.108-.776.418-1.305.76-1.606-2.665-.304-5.467-1.333-5.467-5.93 0-1.31.468-2.381 1.236-3.221-.124-.303-.536-1.524.116-3.176 0 0 1.008-.322 3.3 1.23.957-.266 1.984-.399 3.005-.404 1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.241 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.624-5.479 5.92.43.372.814 1.103.814 2.222 0 1.606-.015 2.901-.015 3.295 0 .32.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12z"/></svg>`;
+        case "zalo": return `<svg viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M8 14c0-3.314 2.686-6 6-6h36c3.314 0 6 2.686 6 6v24c0 3.314-2.686 6-6 6H27l-9.5 9.5c-1.26 1.26-3.5.368-3.5-1.414V44H14c-3.314 0-6-2.686-6-6V14z"/><text x="50%" y="56%" text-anchor="middle" font-size="28" font-weight="800" font-family="Segoe UI, Roboto, Arial" fill="#0a0b0e">Z</text></svg>`;
+        case "instagram": return `<svg viewBox="0 0 448 512" aria-hidden="true"><path fill="currentColor" d="M224 202.7c-37.2 0-67.3 30.1-67.3 67.3s30.1 67.3 67.3 67.3 67.3-30.1 67.3-67.3-30.1-67.3-67.3-67.3zm124.7-41.3c0 14-11.4 25.4-25.4 25.4s-25.4-11.4-25.4-25.4 11.4-25.4 25.4-25.4 25.4 11.4 25.4 25.4zM448 144v224c0 52.9-43.1 96-96 96H96c-52.9 0-96-43.1-96-96V144C0 91.1 43.1 48 96 48h256c52.9 0 96 43.1 96 96zm-48 0c0-26.5-21.5-48-48-48H96c-26.5 0-48 21.5-48 48v224c0 26.5 21.5 48 48 48h256c26.5 0 48-21.5 48-48V144z"/></svg>`;
+        case "website": return `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20Zm0 2c1.82 0 3.5.61 4.85 1.64A15.7 15.7 0 0112 9.4a15.7 15.7 0 01-4.85-3.76A7.97 7.97 0 0112 4Zm0 16a7.97 7.97 0 01-4.85-1.64A15.7 15.7 0 0112 14.6a15.7 15.7 0 014.85 3.76A7.97 7.97 0 0112 20Zm6.93-3.07A17.65 17.65 0 0013.4 12c2.03-1.36 3.76-3.1 5.13-5.13A7.96 7.96 0 0120 12c0 1.82-.61 3.5-1.07 4.93ZM4.07 7.07A17.65 17.65 0 0010.6 12c-2.03 1.36-3.76 3.1-5.13 5.13A7.96 7.96 0 014 12c0-1.82.61-3.5 1.07-4.93Z"/></svg>`;
+        default: return "";
+      }
+    }
+
+    function createSocialItem(key, url){
+      const labels = { facebook:"Facebook", github:"GitHub", zalo:"Zalo", instagram:"Instagram", website:"Website" };
+      const li = createElement("li", { className:"social-item", role:"listitem" });
+      const a = createElement("a", {
+        className:`icon-card icon-${key}`, href:safeURL(url), target:"_blank", rel:"noopener noreferrer",
+        "aria-label":labels[key]||key, title:labels[key]||key, html:svgFor(key)
+      });
+      const span = createElement("span", { className:"icon-label" }, [labels[key]||key]);
+      li.appendChild(a); li.appendChild(span); return li;
+    }
+
+    (function buildSocials(){
+      const list = document.getElementById("social-grid"); if(!list) return;
+      let cfg={}; try{ cfg = JSON.parse(document.getElementById("benadmin")?.textContent||"{}") }catch{ cfg={} }
+      ["facebook","github","zalo","instagram","website"].forEach(k=>{
+        const v=(cfg[k]||"").trim(); if(v) list.appendChild(createSocialItem(k,v));
+      });
+      if(!list.children.length){ const wrap=list.closest(".top-socials"); if(wrap) wrap.style.display="none"; }
+    })();
+
+    (function(){
+      const bg=document.querySelector(".parallax-bg"); if(!bg) return;
+      window.addEventListener("scroll", ()=>{ bg.style.transform = `translate3d(0, ${-0.15*window.scrollY}px, 0)`; }, {passive:true});
+    })();
+
+    (function(){
+      const el=document.getElementById("typewriter"); if(!el) return;
+      const texts=["Developer & Tech Enthusiast","I build small tools, bots & fun projects","Learning daily — C++, Python, JS"];
+      let idx=0,len=0,back=false;
+      function tick(){
+        const s=texts[idx];
+        if(back){ len--; el.textContent=s.slice(0,Math.max(0,len)); if(len<=0){back=false; idx=(idx+1)%texts.length; setTimeout(tick,400); return;} }
+        else { len++; el.textContent=s.slice(0,Math.min(s.length,len)); if(len>=s.length){ back=true; setTimeout(tick,1200); return;} }
+        setTimeout(tick, back?40:70);
+      } tick();
+    })();
+
+    (function(){
+      const io=new IntersectionObserver((entries)=>{
+        entries.forEach((entry)=>{
+          if(!entry.isIntersecting) return;
+          entry.target.classList.add("appear");
+          entry.target.querySelectorAll(".ring").forEach((ring)=>{
+            const val=parseInt(ring.getAttribute("data-val")||ring.style.getPropertyValue("--val")||"0",10);
+            ring.style.setProperty("--fill", val);
+            const v=ring.querySelector(".ring-value"); if(v) v.textContent=val+"%";
+          });
+        });
+      },{threshold:0.12});
+      document.querySelectorAll(".fade-in").forEach((el)=>{ el.classList.add("fade-in"); io.observe(el); });
+    })();
+
+    (function(){
+      const btn=document.getElementById("toggle-theme"), root=document.documentElement;
+      try{ const saved=localStorage.getItem("mh_theme"); if(saved) root.setAttribute("data-theme", saved); }catch{}
+      btn?.addEventListener("click", ()=>{
+        const next=(root.getAttribute("data-theme")||"dark")==="dark"?"light":"dark";
+        root.setAttribute("data-theme", next); try{ localStorage.setItem("mh_theme", next); }catch{}
+      });
+    })();
+    (function(){
+      const btn=document.getElementById("play-audio");
+      let ctx=null, osc=null, gain=null, playing=false;
+      function start(){
+        if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+        gain=ctx.createGain(); gain.gain.value=0.0001; gain.connect(ctx.destination);
+        osc=ctx.createOscillator(); osc.type="sine"; osc.frequency.value=440; osc.connect(gain); osc.start();
+        // fade in + ambient wobble
+        const t=ctx.currentTime; gain.gain.linearRampToValueAtTime(0.05, t+1.2);
+        let f=440; const id=setInterval(()=>{ if(!osc){clearInterval(id);return} f += (Math.random()-0.5)*8; osc.frequency.setTargetAtTime(Math.max(220, Math.min(660, f)), ctx.currentTime, 0.2); }, 800);
+        playing=true;
+      }
+      function stop(){ if(!osc||!gain||!ctx) return; gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+0.4); setTimeout(()=>{ try{osc.stop();}catch{} osc=null; gain=null; }, 450); playing=false; }
+      btn?.addEventListener("click", ()=>{ if(!playing) start(); else stop(); btn.classList.toggle("active"); });
+    })();
+
+    (function(){
+      const form=document.getElementById("contact-form"), copyBtn=document.getElementById("copy-email"), note=document.getElementById("contact-note");
+      function focusStyle(el,on){ el.style.boxShadow=on?"0 0 0 4px rgba(0,234,255,0.08)":"none"; el.style.borderColor=on?"rgba(0,234,255,0.35)":"rgba(255,255,255,0.06)"; }
+      ["input-name","input-email","input-message"].forEach(id=>{ const el=document.getElementById(id); if(!el) return; el.addEventListener("focus",()=>focusStyle(el,true)); el.addEventListener("blur",()=>focusStyle(el,false)); });
+      if(form){ form.addEventListener("submit",(e)=>{ e.preventDefault(); const d=new FormData(form);
+        const name=(d.get("name")||"").toString().trim(); const email=(d.get("email")||"").toString().trim(); const message=(d.get("message")||"").toString().trim();
+        const subject=encodeURIComponent("Liên hệ từ website: "+name+(email?(" ("+email+")"):"")); const body=encodeURIComponent(message+"\n\n--\nGửi từ profile");
+        window.location.href="mailto:mhung@example.com?subject="+subject+"&body="+body;
+      });}
+      copyBtn?.addEventListener("click", async ()=>{ try{ await navigator.clipboard.writeText("mhung@example.com"); alert("Đã copy email"); }catch{ alert("Không thể copy"); } });
+      if(note) note.innerText="Thông tin b nhập chỉ b biết, chưa được gửi ra ngoài";
+    })();
+
+    (function(){
+      const openBtn=document.getElementById("open-console"), modal=document.getElementById("console-modal"),
+            out=document.getElementById("console-output"), input=document.getElementById("console-input"),
+            send=document.getElementById("console-send"), closeBtn=document.getElementById("close-console");
+      function open(){ modal.style.display="block"; modal.setAttribute("aria-hidden","false"); setTimeout(()=>modal.style.transform="translate(-50%,-50%) scale(1)",40); input.focus(); }
+      function close(){ modal.style.transform="translate(-50%,-50%) scale(0.95)"; setTimeout(()=>{ modal.style.display="none"; modal.setAttribute("aria-hidden","true"); },180); }
+      function print(line){ const div=document.createElement("div"); div.textContent=line; out.appendChild(div); out.scrollTop=out.scrollHeight; }
+      function run(cmd){ const t=(cmd||"").trim().toLowerCase(); if(!t) return; print("> "+t);
+        switch(t){
+          case "help": print("Commands: help, about, skills, projects, theme, clear, close"); break;
+          case "about": print("Developer & Tech Enthusiast."); break;
+          case "skills": print("HTML:92%, CSS:88%, JS:84%, Python:80%, C++:1%"); break;
+          case "projects": print("Các tool python tự động hóa làm các công việc"); break;
+          case "theme": document.documentElement.setAttribute("data-theme",(document.documentElement.getAttribute("data-theme")||"dark")==="dark"?"light":"dark"); print("Toggled theme."); break;
+          case "clear": out.textContent=""; break;
+          case "close": close(); break;
+          default: print("Unknown command. Type help.");
+        }
+      }
+      openBtn?.addEventListener("click", open);
+      closeBtn?.addEventListener("click", close);
+      send?.addEventListener("click", ()=>{ run(input.value||""); input.value=""; });
+      input?.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); run(input.value||""); input.value=""; } });
+      window.addEventListener("keydown",(e)=>{ if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==="p"){ if(modal.style.display==="block") close(); else open(); } });
+    })();
+
+    (function(){
+      const modal=document.getElementById("quiz-modal"), openBtn=document.getElementById("open-quiz"), closeBtn=document.getElementById("close-quiz"), content=document.getElementById("quiz-content");
+      const qs=[{q:"NNLT nào dùng để tạo ra 1 web đơn giản?",a:["CSS","HTML","Python"],correct:1},{q:"Dấu nào kết thúc câu lệnh C++?",a:[".",";",":"],correct:1}];
+      function render(i){ const item=qs[i];
+        content.innerHTML = `<div style="font-weight:700">${item.q}</div>` + item.a.map((choice,idx)=>`<div style="margin-top:8px"><button class="btn opt" data-idx="${idx}" type="button">${choice}</button></div>`).join("");
+        content.querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",(ev)=>{ const pick=parseInt(ev.currentTarget.dataset.idx,10); alert(pick===item.correct?"Chính xác!":"Sai rồi."); const next=i+1; if(next<qs.length) render(next); else content.innerHTML="<div>Hoàn thành! Cảm ơn đã chơi.</div>"; }));
+      }
+      function open(){ modal.style.display="block"; modal.setAttribute("aria-hidden","false"); setTimeout(()=>modal.style.transform="translate(-50%,-50%) scale(1)",40); render(0); }
+      function close(){ modal.style.transform="translate(-50%,-50%) scale(0.95)"; setTimeout(()=>{ modal.style.display="none"; modal.setAttribute("aria-hidden","true"); },180); }
+      openBtn?.addEventListener("click", open); closeBtn?.addEventListener("click", close);
+    })();
+
+    (function(){
+      const btn=document.getElementById("toggle-stealth"), socials=document.querySelector(".top-socials"), avatar=document.getElementById("avatar");
+      let stealth=false, oldSrc=avatar?.src;
+      btn?.addEventListener("click", ()=>{
+        stealth=!stealth;
+        if(socials) socials.style.display = stealth ? "none" : "grid";
+        if(avatar){ if(stealth){ oldSrc=avatar.src; avatar.src = "data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><rect width='100%' height='100%' fill='#0f1117'/><circle cx='64' cy='48' r='28' fill='#1f2433'/><rect x='28' y='84' width='72' height='28' rx='14' fill='#1f2433'/></svg>`); } else { avatar.src=oldSrc; } }
+        btn.textContent = stealth ? "🛡️ Stealth ON" : "🛡️ Stealth";
+      });
+    })();
+
+    ;(function(){
+      const modal=document.getElementById("arcade-modal"), openBtn=document.getElementById("open-arcade"), closeBtn=document.getElementById("close-arcade");
+      const tabs=document.querySelectorAll(".tab"); const tabSnake=document.getElementById("tab-snake"); const tab2048=document.getElementById("tab-t2048");
+      function open(){ modal.style.display="block"; modal.setAttribute("aria-hidden","false"); setTimeout(()=>modal.style.transform="translate(-50%,-50%) scale(1)",40); }
+      function close(){ modal.style.transform="translate(-50%,-50%) scale(0.95)"; setTimeout(()=>{ modal.style.display="none"; modal.setAttribute("aria-hidden","true"); },180); }
+      openBtn?.addEventListener("click", open); closeBtn?.addEventListener("click", close);
+      tabs.forEach(t=>t.addEventListener("click",()=>{ tabs.forEach(x=>x.classList.remove("active")); t.classList.add("active");
+        const name=t.dataset.tab; tabSnake.classList.toggle("hidden", name!=="snake"); tab2048.classList.toggle("hidden", name!=="t2048");
+      }));
+
+      const cvs=document.getElementById("snakeCanvas"); const ctx=cvs.getContext("2d"); let grid=20, snake, dir, food, score=0, timer;
+      function rndCell(){ return {x: Math.floor(Math.random()* (cvs.width/grid)), y: Math.floor(Math.random()* (cvs.height/grid))}; }
+      function resetSnake(){ snake=[{x:5,y:5}], dir={x:1,y:0}; food=rndCell(); score=0; document.getElementById("snakeScore").textContent="Điểm: "+score; }
+      function step(){ const head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+        if(head.x<0||head.y<0||head.x>=cvs.width/grid||head.y>=cvs.height/grid|| snake.some(s=>s.x===head.x&&s.y===head.y)){ resetSnake(); return; }
+        snake.unshift(head);
+        if(head.x===food.x&&head.y===food.y){ score++; document.getElementById("snakeScore").textContent="Điểm: "+score; food=rndCell(); }
+        else snake.pop();
+        // draw
+        ctx.fillStyle="rgba(255,255,255,.02)"; ctx.fillRect(0,0,cvs.width,cvs.height);
+        ctx.fillStyle="#39ff14"; snake.forEach(s=>ctx.fillRect(s.x*grid,s.y*grid,grid-2,grid-2));
+        ctx.fillStyle="#ff2dbf"; ctx.fillRect(food.x*grid, food.y*grid, grid-2, grid-2);
+      }
+      function keySnake(e){ const k=e.key; if(k==="ArrowUp" && dir.y!==1) dir={x:0,y:-1};
+        else if(k==="ArrowDown" && dir.y!==-1) dir={x:0,y:1};
+        else if(k==="ArrowLeft" && dir.x!==1) dir={x:-1,y:0};
+        else if(k==="ArrowRight" && dir.x!==-1) dir={x:1,y:0}; }
+      function startSnake(){ resetSnake(); clearInterval(timer); timer=setInterval(step, 120); }
+      window.addEventListener("keydown", keySnake);
+      // Start on first open
+      openBtn?.addEventListener("click", startSnake);
+
+      const boardEl=document.getElementById("gBoard"), scoreEl=document.getElementById("gScore"), newBtn=document.getElementById("gNew");
+      let board, gScore;
+      function emptyCells(){ const a=[]; for(let i=0;i<16;i++) if(!board[i]) a.push(i); return a; }
+      function addRandom(){ const empties=emptyCells(); if(!empties.length) return; const idx=empties[Math.floor(Math.random()*empties.length)]; board[idx]=(Math.random()<0.9)?2:4; }
+      function reset2048(){ board=new Array(16).fill(0); gScore=0; addRandom(); addRandom(); draw2048(); }
+      function draw2048(){ boardEl.innerHTML=""; scoreEl.textContent="Score: "+gScore;
+        board.forEach(v=>{ const d=document.createElement("div"); d.className="gcell c"+(v||0); d.textContent=v||""; boardEl.appendChild(d); });
+      }
+      function slideRow(row){ let arr=row.filter(v=>v); for(let i=0;i<arr.length-1;i++){ if(arr[i]===arr[i+1]){ arr[i]*=2; gScore+=arr[i]; arr.splice(i+1,1); } } while(arr.length<4) arr.push(0); return arr; }
+      function move(dir){ // dir: 0 left,1 up,2 right,3 down
+        const old=board.slice();
+        const get=(r,c)=>board[r*4+c], set=(r,c,val)=>board[r*4+c]=val;
+        if(dir===0||dir===2){ // left/right
+          for(let r=0;r<4;r++){ const row=[get(r,0),get(r,1),get(r,2),get(r,3)]; let res=slideRow(dir===0?row:row.reverse()); if(dir===2) res=res.reverse(); for(let c=0;c<4;c++) set(r,c,res[c]); }
+        } else { // up/down
+          for(let c=0;c<4;c++){ const col=[get(0,c),get(1,c),get(2,c),get(3,c)]; let res=slideRow(dir===1?col:col.reverse()); if(dir===3) res=res.reverse(); for(let r=0;r<4;r++) set(r,c,res[r]); }
+        }
+        if(board.some((v,i)=>v!==old[i])){ addRandom(); draw2048(); }
+      }
+      function key2048(e){ const m={ArrowLeft:0,ArrowUp:1,ArrowRight:2,ArrowDown:3}; if(m[e.key]!==undefined){ e.preventDefault(); move(m[e.key]); } }
+      newBtn?.addEventListener("click", reset2048);
+      document.getElementById("open-arcade")?.addEventListener("click", ()=>{ reset2048(); });
+      window.addEventListener("keydown", key2048);
+    })();
+
+    (function(){
+      const modal=document.getElementById("mystery-modal"), openBtn=document.getElementById("open-mystery"), closeBtn=document.getElementById("close-mystery");
+      const txt=document.getElementById("cipherText"), shift=document.getElementById("cipherShift"), enc=document.getElementById("cipherEnc"), dec=document.getElementById("cipherDec"), out=document.getElementById("cipherOut");
+      const riddles=[
+        ["Không có miệng mà nói, không có tai mà nghe. Là gì?","Vọng âm (Echo)"],
+        ["Người tạo ra nó bán nó. Người mua nó không dùng nó. Người dùng nó không biết mình đang dùng nó. Là gì?","Quan tài"],
+        ["Tôi có chìa mà không mở được cửa. Tôi là gì?","Bàn phím"]
+      ];
+      function caesar(s,n){ n=((n%26)+26)%26; return s.replace(/[a-z]/gi, ch=>{ const base = ch>='a'&&ch<='z' ? 97 : 65; return String.fromCharCode((ch.charCodeAt(0)-base+n)%26+base); }); }
+      enc?.addEventListener("click", ()=>{ out.textContent = caesar(txt.value||"", parseInt(shift.value||"0",10)); });
+      dec?.addEventListener("click", ()=>{ out.textContent = caesar(txt.value||"", -parseInt(shift.value||"0",10)); });
+      const box=document.getElementById("riddleBox"), next=document.getElementById("riddleNext"); let ri=0;
+      function renderRiddle(){ const [q,a]=riddles[ri]; box.innerHTML=`<div><strong>❓</strong> ${q}</div><details style="margin-top:6px"><summary>Gợi ý/Đáp án</summary><div style="margin-top:6px">${a}</div></details>`; }
+      next?.addEventListener("click", ()=>{ ri=(ri+1)%riddles.length; renderRiddle(); });
+      function open(){ modal.style.display="block"; modal.setAttribute("aria-hidden","false"); setTimeout(()=>modal.style.transform="translate(-50%,-50%) scale(1)",40); renderRiddle(); }
+      function close(){ modal.style.transform="translate(-50%,-50%) scale(0.95)"; setTimeout(()=>{ modal.style.display="none"; modal.setAttribute("aria-hidden","true"); },180); }
+      openBtn?.addEventListener("click", open); closeBtn?.addEventListener("click", close);
+
+      // Konami code để mở nhanh: ↑ ↑ ↓ ↓ ← → ← → B A
+      const seq=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"]; let pos=0;
+      window.addEventListener("keydown",(e)=>{ const k=e.key.length===1?e.key.toLowerCase():e.key; if(k===seq[pos]){ pos++; if(pos===seq.length){ pos=0; open(); } } else { pos=0; } });
+    })();
+
+    document.body.addEventListener("keydown",(e)=>{ if(e.key==="Tab") document.documentElement.classList.add("show-focus"); }, {once:true});
+    
+  </script>
+<script>
+(function ytAudio() {
+  const wrap = document.getElementById("yt-audio");
+  const iframe = document.getElementById("yt-iframe");
+  const btn = document.getElementById("play-audio");
+  if (!wrap || !iframe || !btn) return;
+
+  // Nhận mọi dạng URL: watch?v=, youtu.be/, shorts/
+  function extractYouTubeId(url) {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+      if (u.pathname.startsWith("/shorts/")) return u.pathname.split("/shorts/")[1].split(/[?&#]/)[0];
+      return u.searchParams.get("v");
+    } catch { return null; }
+  }
+
+  const raw = wrap.getAttribute("data-youtube-url") || "";
+  const id = extractYouTubeId(raw);
+  if (!id) {
+    console.warn("YouTube: URL không hợp lệ:", raw);
+    return;
+  }
+
+  // Autoplay (mute) ngay khi load để đảm bảo chạy theo chính sách trình duyệt.
+  // Bấm nút sẽ unmute và đặt volume.
+  const params = new URLSearchParams({
+    enablejsapi: "1",
+    autoplay: "1",
+    mute: "1",
+    playsinline: "1",
+    modestbranding: "1",
+    rel: "0",
+    controls: "0",
+    loop: "1",
+    playlist: id
+  });
+
+  // Bạn có thể đổi youtube-nocookie.com cho riêng tư hơn:
+  const base = "https://www.youtube.com/embed/";
+  // const base = "https://www.youtube-nocookie.com/embed/"; // bật dòng này nếu muốn
+
+  iframe.src = base + id + "?" + params.toString();
+
+  function post(func, args = []) {
+    try {
+      iframe.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+    } catch {}
+  }
+
+  // Khi player sẵn sàng, nó sẽ tự play (mute)
+  window.addEventListener("message", (e) => {
+    try {
+      const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+      if (data && data.event === "onReady") post("playVideo");
+    } catch {}
+  });
+
+  // Nhấn nút: bật tiếng + chỉnh âm lượng
+  btn.addEventListener("click", () => {
+    post("playVideo");
+    post("unMute");
+    post("setVolume", [70]); // 0..100
+    btn.classList.toggle("active");
+  });
+})();
+</script>
+
+  <!-- Fallback khi JS bị chặn: các mục vẫn hiện đầy đủ -->
+  <noscript><style>.fade-in{opacity:1 !important; transform:none !important}</style></noscript>
+</body>
+</html>
