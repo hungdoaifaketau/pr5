@@ -31,10 +31,11 @@
 
     <!-- Security basics -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-        <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
 
     <!-- CSP: cho inline script & style để trang hoạt động; không gọi bên ngoài (trừ ảnh của bạn) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; manifest-src 'self' data:;" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; manifest-src 'self' data:;" />
 
     <!-- PWA Support -->
     <meta name="theme-color" content="#0a0b0e" media="(prefers-color-scheme: dark)" />
@@ -1296,7 +1297,7 @@
         <div id="console-output" class="console-output">Type <code>help</code> to see commands.</div>
         <div class="console-input">
             <input id="console-input" placeholder="Nhập lệnh (ví dụ: help, about, skills, projects)" />
-            
+
         </div>
     </div>
 
@@ -1312,10 +1313,10 @@
         aria-labelledby="arcade-title">
         <h3 id="arcade-title">🕹️ Arcade</h3>
         <div class="tabs">
-            
-            
-            
-            
+
+
+
+
         </div>
         <div id="tab-snake">
             <canvas id="snakeCanvas" width="400" height="260" aria-label="Snake game"></canvas>
@@ -1325,7 +1326,7 @@
         </div>
         <div id="tab-t2048" class="hidden">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-                
+
                 <div id="gScore" style="font-weight:700">Score: 0</div>
                 <div style="color:var(--muted);font-size:13px;margin-left:auto">Dùng phím mũi tên để gộp ô</div>
             </div>
@@ -1334,7 +1335,7 @@
 
         <div id="tab-tetris" class="hidden">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-                
+
                 <div id="tetrisScore" style="font-weight:700">Score: 0</div>
                 <div id="tetrisLevel" style="font-weight:700">Level: 1</div>
                 <div style="color:var(--muted);font-size:13px;margin-left:auto">Dùng phím mũi tên + Space để xoay</div>
@@ -1359,7 +1360,7 @@
 
         <div id="tab-memory" class="hidden">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-                
+
                 <div id="memoryScore" style="font-weight:700">Moves: 0</div>
                 <div id="memoryTime" style="font-weight:700">Time: 0s</div>
                 <div style="color:var(--muted);font-size:13px;margin-left:auto">Click để lật thẻ</div>
@@ -1381,15 +1382,15 @@
                     <input id="cipherText" placeholder="Nhập văn bản" class="btn"
                         style="flex:1;min-width:220px;text-align:left" />
                     <input id="cipherShift" type="number" value="3" class="btn" style="width:80px" />
-                    
-                    
+
+
                 </div>
                 <div id="cipherOut" style="margin-top:6px;color:var(--muted);word-break:break-word"></div>
             </div>
             <div>
                 <strong>Riddles</strong>
                 <div id="riddleBox" style="margin-top:6px;color:var(--text)"></div>
-                
+
             </div>
             <div style="color:var(--muted);font-size:12px">Mọi thao tác đều chạy cục bộ (offline). Không ghi log, không
                 gửi dữ liệu.</div>
@@ -1400,8 +1401,7 @@
     <!-- YouTube audio -->
     <div id="yt-audio" data-youtube-url="https://www.youtube.com/watch?v=WENU9ifn7L0">
         <iframe id="yt-iframe" class="yt-audio-frame" title="YouTube audio"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen" src="about:blank"
-            loading="lazy">
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen" src="about:blank" loading="lazy">
         </iframe>
     </div>
 
@@ -1588,7 +1588,7 @@
                 showNotification(`Đã chuyển sang ${next === 'dark' ? 'Dark' : 'Light'} mode!`, 'success');
             });
         })();
-        
+
 
         (function () {
             const form = document.getElementById("contact-form"), copyBtn = document.getElementById("copy-email"), note = document.getElementById("contact-note");
